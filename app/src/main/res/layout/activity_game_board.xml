@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <fr.goui.dominosfevahh.custom.GameBoardView
+        android:id="@+id/game_board_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_guideline"
+        app:layout_constraintLeft_toRightOf="@+id/left_guideline"
+        app:layout_constraintRight_toLeftOf="@+id/right_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/top_guideline" />
+
+    <fr.goui.dominosfevahh.custom.PlayerView
+        android:id="@+id/game_board_player_left_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_guideline"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/left_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/top_guideline"
+        app:orientation="vertical" />
+
+    <fr.goui.dominosfevahh.custom.PlayerView
+        android:id="@+id/game_board_player_right_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_guideline"
+        app:layout_constraintLeft_toRightOf="@+id/right_guideline"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/top_guideline"
+        app:orientation="vertical" />
+
+    <fr.goui.dominosfevahh.custom.PlayerView
+        android:id="@+id/game_board_player_top_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/top_guideline"
+        app:layout_constraintLeft_toRightOf="@+id/left_guideline"
+        app:layout_constraintRight_toLeftOf="@+id/right_guideline"
+        app:layout_constraintTop_toTopOf="parent"
+        app:orientation="horizontal" />
+
+    <fr.goui.dominosfevahh.custom.PlayerView
+        android:id="@+id/game_board_player_bottom_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/left_guideline"
+        app:layout_constraintRight_toLeftOf="@+id/right_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/bottom_guideline"
+        app:orientation="horizontal" />
+
+    <ImageView
+        android:id="@+id/game_board_info_image_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@android:color/white"
+        android:clickable="true"
+        android:padding="8dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_info_black_24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/left_guideline"
+        app:layout_constraintTop_toTopOf="@+id/bottom_guideline" />
+
+    <ImageView
+        android:id="@+id/game_board_settings_image_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@android:color/white"
+        android:clickable="true"
+        android:padding="8dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_settings_black_24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@+id/right_guideline"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/bottom_guideline" />
+
+    <ImageView
+        android:id="@+id/game_board_uno_image_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@android:color/white"
+        android:clickable="true"
+        android:padding="8dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_format_underlined_black_24dp"
+        app:layout_constraintBottom_toTopOf="@+id/top_guideline"
+        app:layout_constraintLeft_toLeftOf="@+id/right_guideline"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/game_board_stack_image_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@android:color/white"
+        android:clickable="true"
+        android:padding="8dp"
+        android:src="@drawable/falling_dominoes"
+        app:layout_constraintBottom_toTopOf="@+id/top_guideline"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/left_guideline"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/game_board_stack_size_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:shadowColor="@android:color/black"
+        android:shadowDx="0.0"
+        android:shadowDy="0.0"
+        android:shadowRadius="1.0"
+        android:text="0"
+        android:textColor="@android:color/holo_red_light"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/top_guideline"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/left_guideline"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/left_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.10" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/right_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.90" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/top_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.16" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/bottom_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.84" />
+
+    <ImageView
+        android:id="@+id/game_board_player_bottom_turn_image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:src="@drawable/ic_expand_more_black_24dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/bottom_guideline"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/bottom_guideline" />
+
+    <ImageView
+        android:id="@+id/game_board_player_left_turn_image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:src="@drawable/ic_chevron_left_black_24dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+        app:layout_constraintRight_toRightOf="@+id/left_guideline"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/game_board_player_top_turn_image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:src="@drawable/ic_expand_less_black_24dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/top_guideline"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/top_guideline" />
+
+    <ImageView
+        android:id="@+id/game_board_player_right_turn_image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:src="@drawable/ic_chevron_right_black_24dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@+id/right_guideline"
+        app:layout_constraintRight_toRightOf="@+id/right_guideline"
+        app:layout_constraintTop_toTopOf="parent" />
+</android.support.constraint.ConstraintLayout>
