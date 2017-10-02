@@ -21,6 +21,7 @@ import fr.goui.dominosfevahh.custom.GameBoardManager;
 import fr.goui.dominosfevahh.custom.GameBoardView;
 import fr.goui.dominosfevahh.custom.PlayerView;
 import fr.goui.dominosfevahh.event_bus.DominoPlayedEvent;
+import fr.goui.dominosfevahh.model.Domino;
 import fr.goui.dominosfevahh.model.DominoModel;
 
 public class GameBoardActivity extends AppCompatActivity {
@@ -67,6 +68,12 @@ public class GameBoardActivity extends AppCompatActivity {
 
     private int mPlayerPosition;
 
+    private PlayerView[] mPlayerViews = new PlayerView[4];
+
+    private PlayerView mCurrentPlayerView;
+
+    private ImageView[] mPlayersTurnImageViews = new ImageView[4];
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,16 +82,27 @@ public class GameBoardActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         // game board
         mGameBoardManager = new GameBoardManager(mGameBoardView);
+        // players
+        mPlayerViews[BOTTOM] = mPlayerBottomView;
+        mPlayerViews[LEFT] = mPlayerLeftView;
+        mPlayerViews[TOP] = mPlayerTopView;
+        mPlayerViews[RIGHT] = mPlayerRightView;
+        mPlayersTurnImageViews[BOTTOM] = mBottomPlayerTurnImageView;
+        mPlayersTurnImageViews[LEFT] = mLeftPlayerTurnImageView;
+        mPlayersTurnImageViews[TOP] = mTopPlayerTurnImageView;
+        mPlayersTurnImageViews[RIGHT] = mRightPlayerTurnImageView;
         // distributing dominoes
         mPlayerLeftView.setDominoesList(mDominoModel.pickRandom(5));
         mPlayerRightView.setDominoesList(mDominoModel.pickRandom(5));
         mPlayerTopView.setDominoesList(mDominoModel.pickRandom(5));
         mPlayerBottomView.setPlayer(true);
-        mPlayerBottomView.setMyTurn(true);
         mPlayerBottomView.setDominoesList(mDominoModel.pickRandom(5));
         mBottomPlayerTurnImageView.setVisibility(View.VISIBLE);
+        // choose first player
+        chooseFirstPlayer(6);
         // stack size
-        updateStackSize();
+        updateStackText();
+        updateStackColor();
     }
 
     @OnClick(R.id.game_board_info_image_view)
@@ -102,38 +120,80 @@ public class GameBoardActivity extends AppCompatActivity {
         // TODO activate uno to avoid counter uno
     }
 
+    /**
+     * Chooses the first player to play.
+     *
+     * @param doubleNumber the number of the highest double not in the stack.
+     */
+    private void chooseFirstPlayer(int doubleNumber) {
+        Log.i(TAG, "chooseFirstPlayer with: " + doubleNumber);
+        if (mDominoModel.isDoubleInStack(doubleNumber)) {
+            Log.i(TAG, "this double is in the stack");
+            chooseFirstPlayer(--doubleNumber);
+        } else {
+            Log.i(TAG, "this double is NOT in the stack");
+            for (int i = 0; i < 4; i++) {
+                if (mPlayerViews[i].hasDouble(doubleNumber)) {
+                    Log.i(TAG, "player " + i + " is the first player");
+                    mCurrentPlayerView = mPlayerViews[i];
+                    mCurrentPlayerView.setMyTurn(true);
+                    mPlayerPosition = i;
+                    mPlayersTurnImageViews[i].setVisibility(View.VISIBLE);
+                }
+            }
+        }
+    }
+
     @OnClick(R.id.game_board_stack_image_view)
     public void onStackClick() {
-        // if possible add a remaining domino to the bottom player
-        if (mDominoModel.getStackSize() > 0) {
-            makeCurrentPlayerPick();
-            updateStackSize();
+        // if possible add a remaining domino to the current player
+        if (isStackAvailableForCurrentPlayer() && mDominoModel.getStackSize() > 0) {
+            mCurrentPlayerView.addDomino(mDominoModel.pickRandom());
+            updateStackText();
+            updateStackColor();
+        }
+        // if there is no more domino in the stack just pass
+        else if (isStackAvailableForCurrentPlayer()) {
+            onDominoPlayedEvent(null);
+            updateStackColor();
         }
     }
 
-    private void makeCurrentPlayerPick() {
-        switch (mPlayerPosition) {
-            case BOTTOM:
-                mPlayerBottomView.addDomino(mDominoModel.pickRandom());
-                break;
-            case LEFT:
-                mPlayerLeftView.addDomino(mDominoModel.pickRandom());
-                break;
-            case TOP:
-                mPlayerTopView.addDomino(mDominoModel.pickRandom());
-                break;
-            case RIGHT:
-                mPlayerRightView.addDomino(mDominoModel.pickRandom());
-                break;
-        }
+    /**
+     * Updates the char written on top of the stack.
+     */
+    private void updateStackText() {
+        mStackSizeTextView.setText(mDominoModel.getStackSize() > 0 ?
+                String.valueOf(mDominoModel.getStackSize()) :
+                "P");
     }
 
-    private void updateStackSize() {
-        mStackSizeTextView.setText(String.valueOf(mDominoModel.getStackSize()));
-        mStackSizeTextView.setTextColor(ContextCompat.getColor(this,
-                mDominoModel.getStackSize() > 0 ?
-                        android.R.color.holo_green_light :
-                        android.R.color.holo_red_light));
+    /**
+     * Puts the green color on the stack if it can be clicked, the red one if not.
+     */
+    private void updateStackColor() {
+        mStackSizeTextView.setTextColor(ContextCompat.getColor(this, isStackAvailableForCurrentPlayer() ?
+                android.R.color.holo_green_light :
+                android.R.color.holo_red_light));
+    }
+
+    /**
+     * If the stack can be clicked by current player.
+     *
+     * @return true if it is, false otherwise
+     */
+    private boolean isStackAvailableForCurrentPlayer() {
+        boolean ret = true;
+        for (Domino domino : mCurrentPlayerView.getDominoes()) {
+            if (domino.getFirst() == mGameBoardManager.getLeftValue()
+                    || domino.getFirst() == mGameBoardManager.getRightValue()
+                    || domino.getSecond() == mGameBoardManager.getLeftValue()
+                    || domino.getSecond() == mGameBoardManager.getRightValue()
+                    || mGameBoardManager.getLeftValue() == -1) {
+                ret = false;
+            }
+        }
+        return ret;
     }
 
     @Override
@@ -160,6 +220,7 @@ public class GameBoardActivity extends AppCompatActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDominoPlayedEvent(DominoPlayedEvent event) {
+        // changing current player
         mPlayerPosition = mPlayerPosition == RIGHT ? BOTTOM : mPlayerPosition + 1;
         mPlayerBottomView.setMyTurn(mPlayerPosition == BOTTOM);
         mBottomPlayerTurnImageView.setVisibility(mPlayerPosition == BOTTOM ? View.VISIBLE : View.GONE);
@@ -169,9 +230,31 @@ public class GameBoardActivity extends AppCompatActivity {
         mTopPlayerTurnImageView.setVisibility(mPlayerPosition == TOP ? View.VISIBLE : View.GONE);
         mPlayerRightView.setMyTurn(mPlayerPosition == RIGHT);
         mRightPlayerTurnImageView.setVisibility(mPlayerPosition == RIGHT ? View.VISIBLE : View.GONE);
+        switch (mPlayerPosition) {
+            case BOTTOM:
+                mCurrentPlayerView = mPlayerBottomView;
+                break;
+            case LEFT:
+                mCurrentPlayerView = mPlayerLeftView;
+                break;
+            case TOP:
+                mCurrentPlayerView = mPlayerTopView;
+                break;
+            case RIGHT:
+                mCurrentPlayerView = mPlayerRightView;
+                break;
+        }
+        // updating the stack
+        updateStackColor();
     }
 
     public static Intent getStartingIntent(Context callingContext) {
         return new Intent(callingContext, GameBoardActivity.class);
     }
+
+    // TODO complete rules
+    // force player to play the double in first turn
+    // end game when player has no more domino
+    // end game when nobody can play anymore
+    // allow to choose where to place domino
 }

@@ -185,4 +185,12 @@ public class GameBoardManager {
             leftCounter++;
         }
     }
+
+    public int getLeftValue() {
+        return leftValue;
+    }
+
+    public int getRightValue() {
+        return rightValue;
+    }
 }

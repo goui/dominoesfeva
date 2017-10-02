@@ -1,7 +1,5 @@
 package fr.goui.dominosfevahh.model;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -15,6 +13,8 @@ public class DominoModel {
 
     private Domino[] dominoes = new Domino[Constants.NUMBER_OF_DOMINOES];
 
+    private List<Domino> stack = new ArrayList<>();
+
     private Set<Integer> picked = new HashSet<>();
 
     private Random random = new Random();
@@ -24,21 +24,25 @@ public class DominoModel {
         for (int i = 0; i <= 6; i++) {
             for (int j = 0; j <= i; j++) {
                 dominoes[count] = new Domino(i, j);
+                stack.add(dominoes[count]);
                 count++;
             }
         }
     }
 
     public Domino pickRandom() {
-        return dominoes[pickNumber()];
+        Domino domino = dominoes[pickNumber()];
+        stack.remove(domino);
+        return domino;
     }
 
     public List<Domino> pickRandom(int size) {
         if (dominoes.length - picked.size() >= size) {
             List<Domino> ret = new ArrayList<>();
             for (int i = 0; i < size; i++) {
-                ret.add(dominoes[pickNumber()]);
-                Log.i(TAG, i + ": " + ret.get(i));
+                Domino domino = dominoes[pickNumber()];
+                ret.add(domino);
+                stack.remove(domino);
             }
             return ret;
         } else {
@@ -57,5 +61,15 @@ public class DominoModel {
 
     public int getStackSize() {
         return Constants.NUMBER_OF_DOMINOES - picked.size();
+    }
+
+    public boolean isDoubleInStack(int doubleNumber) {
+        boolean ret = false;
+        for (Domino domino : stack) {
+            if (domino.getFirst() == doubleNumber && domino.getSecond() == doubleNumber) {
+                ret = true;
+            }
+        }
+        return ret;
     }
 }

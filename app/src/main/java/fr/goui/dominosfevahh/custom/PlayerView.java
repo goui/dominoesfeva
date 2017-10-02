@@ -130,6 +130,31 @@ public class PlayerView extends View {
     }
 
     /**
+     * Gets the list of dominoes.
+     *
+     * @return the list of dominoes
+     */
+    public List<Domino> getDominoes() {
+        return dominoes;
+    }
+
+    /**
+     * If the player has the double domino of the specified number.
+     *
+     * @param doubleNumber the double number
+     * @return true if the player has it, false otherwise
+     */
+    public boolean hasDouble(int doubleNumber) {
+        boolean ret = false;
+        for (Domino domino : dominoes) {
+            if (domino.getFirst() == doubleNumber && domino.getSecond() == doubleNumber) {
+                ret = true;
+            }
+        }
+        return ret;
+    }
+
+    /**
      * Indicates if this is a player or a computer.
      * We don't want to show an opponent's dominoes.
      * We want to be able to tap a player's dominoes.
